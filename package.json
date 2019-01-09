@@ -1,0 +1,35 @@
+{
+  "name": "listing_private_repositories",
+  "version": "1.0.0",
+  "description": "List all private repositories and make it easy to manage them",
+  "main": "./src/server/app.js",
+  "scripts": {
+    "dev:web": "live-server --no-browser --port=5500 ./public",
+    "dev:server": "npm run build:css && nodemon",
+    "build:css": "postcss public/stylesheets/tailwind.css -o public/stylesheets/style.css"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/ToiOhomaiBCS/manage_repositories.git"
+  },
+  "author": "Jeff Kranenburg",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ToiOhomaiBCS/manage_repositories/issues"
+  },
+  "homepage": "https://github.com/ToiOhomaiBCS/manage_repositories#readme",
+  "devDependencies": {
+    "bluebird": "^3.5.3",
+    "express": "^4.16.4",
+    "node-fetch": "^2.3.0",
+    "tailwindcss": "^0.7.3"
+  },
+  "dependencies": {
+    "@octokit/rest": "^16.3.2",
+    "dotenv": "^6.2.0",
+    "mysql": "^2.16.0",
+    "passport": "^0.4.0",
+    "passport-github": "^1.1.0",
+    "superagent": "^4.1.0"
+  }
+}
