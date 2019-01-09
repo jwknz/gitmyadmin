@@ -1,1 +1,6 @@
 node_modules/
+old/
+
+# Auto Generated stylesheets
+src/public/stylesheets/style.css
+src/public/stylesheets/tailwind.css
