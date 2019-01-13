@@ -2,10 +2,10 @@
   "name": "listing_private_repositories",
   "version": "1.0.0",
   "description": "List all private repositories and make it easy to manage them",
-  "main": "./src/server/app.js",
+  "main": "./src/app.js",
   "scripts": {
-    "dev:web": "live-server --no-browser --port=5500 ./public",
-    "dev:server": "npm run build:css && nodemon",
+    "dev:web": "live-server --no-browser --port=5500 ./src",
+    "dev:server": "nodemon",
     "build:css": "postcss public/stylesheets/tailwind.css -o public/stylesheets/style.css"
   },
   "repository": {
@@ -26,10 +26,12 @@
   },
   "dependencies": {
     "@octokit/rest": "^16.3.2",
+    "body-parser": "^1.18.3",
     "dotenv": "^6.2.0",
     "mysql": "^2.16.0",
     "passport": "^0.4.0",
     "passport-github": "^1.1.0",
+    "randomstring": "^1.1.5",
     "superagent": "^4.1.0"
   }
 }
