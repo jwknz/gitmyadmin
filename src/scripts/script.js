@@ -9,7 +9,7 @@ fetch(`/home/${q}`, {mode: 'cors'})
 .then(json => json.map(j => {
     
     let tr = document.createElement('tr')
-    tr.classList.add("border", "border-grey-dark", "border-solid", "bg-grey-light")
+    tr.classList.add("border", "border-grey-dark", "border-solid", "bg-grey-darker")
     allrepos.appendChild(tr)
     
     let checkCell    = document.createElement('td')
@@ -87,7 +87,7 @@ fetch(`/home/${q}`, {mode: 'cors'})
         btn1.innerHTML = `${x.name}`
 
         btn1.addEventListener('click', function () {
-            window.open(`https://github.com/${j.login}/${j.name}/archive/${x.name}.zip`, '_blank');
+            window.open(`https://github.com/${j.owner.login}/${j.name}/archive/${x.name}.zip`, '_blank');
         })
 
         downloadCell.appendChild(btn1)
@@ -103,7 +103,7 @@ fetch(`/home/${q}`, {mode: 'cors'})
 
     btn2.addEventListener('click', function () {
         if(confirm('This will permanently remove the repository')) {
-            window.open(`https://api.github.com/${j.owner.login}/${j.name}/archive/${x.name}.zip`, '_blank');
+            window.open(`/delete/${j.owner.login}/${j.name}`, '_blank');
         } 
     })
 

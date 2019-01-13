@@ -171,6 +171,7 @@ app.get('/home/:user', (req, res) => {
         request
         .get(`https://api.github.com/users/${u}/repos`)
         .query({ 
+            per_page: 100,
             client_id: process.env.Client_ID, 
             client_secret: process.env.Client_Secret,
             code: result[0].TOKEN 
@@ -201,6 +202,24 @@ app.get('/branches/:username/:repo', (req, res) => {
         console.log(err)
     })
 
+})
+
+app.get('/delete/:user/:repo', (req, res) => {
+
+    request
+    .del(`http://api.github.com/repos/${req.params.user}/${req.params.repo}`)
+    .query({ 
+        client_id: process.env.Client_ID, 
+        client_secret: process.env.Client_Secret
+    })
+    .set('Accept', 'application/json')
+    .then(result => {
+        if(result.status == 204) {
+            res.redirect("/")
+        } else {
+            console.log(`Somethin went wrong ...${result.status}`)
+        }
+    })
 })
 
 app.get('/rates', (req, res) => {
