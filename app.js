@@ -1,25 +1,10 @@
-// Set the configuration settings
-const credentials = {
-    client: {
-      id: 'a86e9a5cee29785511a3',
-      secret: '2f4dedb9dbeb2c83753f9d53c37a0ffc050d080c'
-    },
-    auth: {
-        tokenHost: 'https://github.com',
-        tokenPath: '/login/oauth/access_token',
-        authorizePath: '/login/oauth/authorize',
-    }
-  };
-
 const request = require('superagent')
 
-const fs = require('fs')
 const path = require('path')
 const crypto = require("crypto")
 
 const express = require('express')
 const app = express()
-const router = express.Router()
 const port = 3000
 
 const fetch = require('node-fetch')
@@ -29,12 +14,19 @@ fetch.Promise = Bluebird
 const randomstring = require("randomstring")
 const r1 = randomstring.generate();
 
-const client = `client_id=${process.env.Client_ID}&client_secret=${process.env.Client_Secret}`
-const server_url = `http://localhost:${port}`
+// Objects
+require('dotenv').load()
 
+// Credentials
+const credentials = {
+    auth: {
+        tokenHost: 'https://github.com',
+        tokenPath: '/login/oauth/access_token',
+        authorizePath: '/login/oauth/authorize',
+    }
+  };
 
 //DB STUFF
-require('dotenv').load()
 const mysql = require('mysql')
 
 const con = mysql.createConnection({
@@ -83,17 +75,18 @@ app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
 // STATIC PATHS
 
-app.use('/css', express.static(path.join(__dirname, "stylesheets")))
-app.use('/script', express.static(path.join(__dirname, "scripts")))
+app.use('/css', express.static(path.join(__dirname, "src", "stylesheets")))
+app.use('/script', express.static(path.join(__dirname, "src", "scripts")))
 
 // FRONT END
 
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname + '/public/index.html'));
+    console.log(__dirname)
+    res.sendFile(path.join(__dirname + "/src/index.html"))
 })
 
 app.get('/your_admin/', (req, res) => {
-    res.sendFile(path.join(__dirname + '/your_admin/index.html'));
+    res.sendFile(path.join(__dirname + "/src/home.html"))
 })
 
 ////////////////
@@ -103,12 +96,9 @@ app.get('/your_admin/', (req, res) => {
 
 app.get('/showall', (req, res) => {        
 
-    // console.log(`${credentials.auth.tokenHost}${credentials.auth.authorizePath}?client_id=${credentials.client.id}`);
-    // console.log(`${credentials.client.id}`);
-
     request
     .get(`${credentials.auth.tokenHost}${credentials.auth.authorizePath}`)
-    .query(`client_id=${credentials.client.id}`)
+    .query(`client_id=${process.env.Client_ID}`)
     .query(`scope=repo:status read:user user:email delete_repo`)
     .then(res1 => {
         res.redirect(credentials.auth.tokenHost+res1.req.path);
@@ -120,8 +110,8 @@ app.get('/register', (req, res, next) => {
     const { query } = req
     const { code } = query
 
-    console.log(query);
-    console.log(code);
+    // console.log(query);
+    // console.log(code);
 
     res.redirect(`/getdata/${code}`);
 })
@@ -228,8 +218,8 @@ function updateDatabase(json, token) {
 
     con.connect(function(err) {
     
-        //console.log(json)
-        console.log(token)
+        // console.log(json)
+        // console.log(token)
 
         if (err) throw err
 
@@ -238,7 +228,7 @@ function updateDatabase(json, token) {
         con.query(check, function (err, reslt) {
             if (err) throw err
             
-            console.log(`RESULT => ${reslt.length}`);
+            // console.log(`RESULT => ${reslt.length}`);
 
             if(reslt.length == 0) {
 
@@ -249,16 +239,16 @@ function updateDatabase(json, token) {
                     console.log("1 record inserted")
                 })                   
             } else {
-                console.log("token is already in database")
+                // console.log("token is already in database")
 
                 const sql = 'UPDATE gma_users SET USERNAME = "' + json.login + '", REPO_URL =  "' + json.repos_url + '", LOCATION = "' + loc + '", AVATAR =  "' + json.avatar_url + '", EMAIL =  "' + json.email + '", TOKEN =  "' + token + '", UPDATE_DATE = NOW() WHERE GITHUB_ID = "' + json.id + '"';
 
                 con.query(sql, function (err, result) {
                     if (err) throw err
-                    console.log("1 record updated")
+                    // console.log("1 record updated")
                 })   
 
-                console.log(sql)
+                // console.log(sql)
             }
         })
     })

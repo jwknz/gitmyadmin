@@ -2,11 +2,11 @@
   "name": "listing_private_repositories",
   "version": "1.0.0",
   "description": "List all private repositories and make it easy to manage them",
-  "main": "./src/app.js",
+  "main": "./app.js",
   "scripts": {
     "dev:web": "live-server --no-browser --port=5500 ./src",
     "dev:server": "nodemon",
-    "build:css": "postcss public/stylesheets/tailwind.css -o public/stylesheets/style.css"
+    "build:css": "postcss stylesheets/tailwind.css -o stylesheets/style.css"
   },
   "repository": {
     "type": "git",
