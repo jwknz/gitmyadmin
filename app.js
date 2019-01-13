@@ -216,42 +216,37 @@ function updateDatabase(json, token) {
 
     const loc = json.location.replace(", ", " - ")
 
-    con.connect(function(err) {
-    
-        // console.log(json)
-        // console.log(token)
-
+    let t = con.connect(function(err) {
         if (err) throw err
 
         const check = 'SELECT ID FROM `gma_users` WHERE USERNAME = "' + json.login + '"'
 
         con.query(check, function (err, reslt) {
             if (err) throw err
-            
-            // console.log(`RESULT => ${reslt.length}`);
-
-            if(reslt.length == 0) {
-
-                const sql = 'INSERT INTO gma_users (USERNAME, GITHUB_ID, REPO_URL, LOCATION, AVATAR, EMAIL, TOKEN, CREATION_DATE, UPDATE_DATE) VALUES ("' + json.login + '","' + json.id + '","' + json.repos_url + '","' + loc + '","' + json.avatar_url + '","' + json.email + '","' + token + '", NOW(), NOW());'
-
-                con.query(sql, function (err, result) {
-                    if (err) throw err
-                    console.log("1 record inserted")
-                })                   
-            } else {
-                // console.log("token is already in database")
-
-                const sql = 'UPDATE gma_users SET USERNAME = "' + json.login + '", REPO_URL =  "' + json.repos_url + '", LOCATION = "' + loc + '", AVATAR =  "' + json.avatar_url + '", EMAIL =  "' + json.email + '", TOKEN =  "' + token + '", UPDATE_DATE = NOW() WHERE GITHUB_ID = "' + json.id + '"';
-
-                con.query(sql, function (err, result) {
-                    if (err) throw err
-                    // console.log("1 record updated")
-                })   
-
-                // console.log(sql)
-            }
+            return reslt.length
         })
     })
+
+    if(t == 0) {
+
+        const sql = 'INSERT INTO gma_users (USERNAME, GITHUB_ID, REPO_URL, LOCATION, AVATAR, EMAIL, TOKEN, CREATION_DATE, UPDATE_DATE) VALUES ("' + json.login + '","' + json.id + '","' + json.repos_url + '","' + loc + '","' + json.avatar_url + '","' + json.email + '","' + token + '", NOW(), NOW());'
+
+        con.query(sql, function (err, result) {
+            if (err) throw err
+            console.log("1 record inserted")
+        })                   
+    } else {
+        // console.log("token is already in database")
+
+        const sql = 'UPDATE gma_users SET USERNAME = "' + json.login + '", REPO_URL =  "' + json.repos_url + '", LOCATION = "' + loc + '", AVATAR =  "' + json.avatar_url + '", EMAIL =  "' + json.email + '", TOKEN =  "' + token + '", UPDATE_DATE = NOW() WHERE GITHUB_ID = "' + json.id + '"';
+
+        con.query(sql, function (err, result) {
+            if (err) throw err
+            console.log("1 record updated")
+        })   
+
+        // console.log(sql)
+    }
 }
 
 app.listen(port, () => console.log(`Server listening.... ${port}`))
